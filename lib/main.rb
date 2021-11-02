@@ -43,7 +43,7 @@ else
   exit
 end
 
-# Right now it's broken, but it's a start
+# Main execution
 Input.args.each_with_index do |argument, i|
   case argument
   when "-n"
