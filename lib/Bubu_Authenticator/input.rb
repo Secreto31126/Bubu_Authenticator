@@ -5,12 +5,10 @@ module Input
   def self.args
     args = []
     ARGV.each do |input|
-      if input.start_with?("-") || args.empty?
+      if input.start_with?("-") || args.empty? || args.last.start_with?("-")
         args.push input.dup
-      elsif !args.last.start_with?("-")
-        args.last << " " << input.dup
       else
-        args.push input.dup
+        args.last << " " << input.dup
       end
     end
     args
