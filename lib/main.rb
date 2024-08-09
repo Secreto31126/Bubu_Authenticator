@@ -31,6 +31,22 @@ def print_help
   puts "-v: The app version"
 end
 
+def add_new_code!(index, json)
+  if ARGV.length > index + 2
+    # Gets everything between the first and the last argument (excluded)
+    name = (ARGV[(index + 1)..(ARGV.length - 2)]).join " "
+    code = ARGV.last
+
+    json["saved_keys"].push({ name: name, code: code })
+    save_to_json! json
+    puts "Added #{name} to the list"
+
+    Auth.get_2fa(name, code)
+  else
+    puts "You need to specify a name and a code"
+  end
+end
+
 if File.exist?("#{File.dirname(__FILE__)}/Data/data.json")
   # Reads the json file
   json = JSON.parse(File.read("#{File.dirname(__FILE__)}/Data/data.json"))
@@ -47,19 +63,7 @@ end
 Input.args.each_with_index do |argument, i|
   case argument
   when "-n"
-    if ARGV.length > i + 2
-      # Gets everything between the first and the last argument (excluded)
-      name = (ARGV[(i + 1)..(ARGV.length - 2)]).join " "
-      code = ARGV.last
-
-      json["saved_keys"].push({ name: name, code: code })
-      save_to_json! json
-      puts "Added #{name} to the list"
-
-      Auth.get_2fa(name, code)
-    else
-      puts "You need to specify a name and a code"
-    end
+    add_new_code!(i, json)
     exit
   when "-r"
     if json.empty?

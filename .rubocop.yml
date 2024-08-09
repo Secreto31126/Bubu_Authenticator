@@ -10,7 +10,7 @@ Style/StringLiteralsInInterpolation:
   EnforcedStyle: double_quotes
 
 Layout/EndOfLine:
-   Enabled: False
+  Enabled: False
 
 Layout/LineLength:
   Max: 120
