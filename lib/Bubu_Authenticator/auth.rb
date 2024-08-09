@@ -5,22 +5,22 @@ require "rotp"
 # Makes the Auth proccess
 module Auth
   def self.get_2fa(name, key)
-    code = ROTP::TOTP.new(key).now.chomp
+    code = ROTP::TOTP.new(key).now.chomp.strip
     puts "\nYour code is: #{code}\nCopying #{name} 2FA to clipboard..."
-
-    if RUBY_PLATFORM =~ /cygwin|mswin|mingw|bccwin|wince|emx/
-      # If OS is windows, use clipboard
-      `echo #{code} | clip`
-    elsif RUBY_PLATFORM =~ "linux"
-      # If OS is linux, use xclip
-      `xclip -selection c #{code}`
-    elsif RUBY_PLATFORM =~ "darwin"
-      # If OS is mac, use pbcopy
-      `pbcopy #{code}`
-    else
-      puts "Unsupported OS, please copy manually"
-    end
-
+    copy_to_clipboard(code)
     puts "Done!"
+  end
+end
+
+def copy_to_clipboard(code)
+  case RUBY_PLATFORM
+  when /cygwin|mswin|mingw|bccwin|wince|emx/
+    `echo #{code} | clip`
+  when "linux"
+    `xclip -selection c #{code}`
+  when "darwin"
+    `pbcopy #{code}`
+  else
+    puts "Unsupported OS, please copy manually"
   end
 end
